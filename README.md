@@ -25,8 +25,8 @@ or
     };
     var getRouter = {                   //Get Method Router and handler GET方法服务器响应
       '/getsomething' : function (req, res) {
-        for (var key in req.qs) {
-          res.send(key + ' : ' + req.qs[key], true);      //res.send 方法接受两个参数，第一个是需要传输的数据，第二个是确定是否保持通讯不中断，以供继续传输。
+        for (var key in req.query) {
+          res.send(key + ' : ' + req.query[key], true);      //res.send 方法接受两个参数，第一个是需要传输的数据，第二个是确定是否保持通讯不中断，以供继续传输。
         }
         res.send('That all');
       }
@@ -37,6 +37,7 @@ or
       }
     };
     web.run()  //Run the first http server 启动首个服务器
+      .use(web.query())
       .url(urlRouter) //Set the url router 传入URL映射规则
       .get(getRouter) //Set the get method router 传入GET方法规则
       .post(postRouter)  //Set the post method router 传入POST方法规则
@@ -81,17 +82,18 @@ Yes! It's so cool!
 
     var getRouter = {
       '/getQuerystring' : function (req, res) {            //Set two arguments, they're request and response. 传入两个参数，分别为Request, Response
-        res.sendJSON(req.qs);           //The first argument can be an Array, an Object or a String. res.sendJSON()方法可以直接传入Array, Object, String的JSON对象
+        res.sendJSON(req.query);           //The first argument can be an Array, an Object or a String. res.sendJSON()方法可以直接传入Array, Object, String的JSON对象
       },
       '/getQueryURL' : function (req, res) {
         res.send(req.url);          //The first argument must be a String. res.send()方法可以只能传入String数据
       },
       '/getFile' : function (req, res) {
-        res.sendFile(req.qs.file);          //The first argument must be a file path.(it needn't begins with './') res.sendFile()方法只能传入含有文件名的String对象，不需要'./'
+        res.sendFile(req.query.file);          //The first argument must be a file path.(it needn't begins with './') res.sendFile()方法只能传入含有文件名的String对象，不需要'./'
       }
     };
 
     web.run(8888)                               //Set a empty url router. 传入空URL路由规则
+      .use(web.query())
       .get(getRouter);                            //Set the get router. 传入GET方法规则
 
 ## POST
@@ -140,13 +142,13 @@ HTTPS方法与HTTP方法相同
     };
     var getRouter = {
       '/getQuerystring' : function (req, res) {
-        res.sendJSON(req.qs);
+        res.sendJSON(req.query);
       },
       '/getQueryURL' : function (req, res) {
         res.send(req.url);
       },
       '/getFile' : function (req, res) {
-        res.sendFile(req.qs.file);  
+        res.sendFile(req.query.file);  
       }
     };
     var postRouter = {
@@ -155,6 +157,7 @@ HTTPS方法与HTTP方法相同
       }
     };
     web.runHttps(8888)
+      .use(web.query())
       .url(urlRouter)
       .get(getRouter)
       .post(postRouter);
@@ -210,6 +213,7 @@ Web.js supports the middleware.
         web.cookieParser('webjs'),
         web.session(),
         web.compress(),
+        web.query(),
         web.complier({ enable: ["less", "sass"] }),
         web.static(__dirname + '/static')
       );
