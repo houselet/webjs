@@ -246,7 +246,7 @@ var index = [
 ].join('\r\n');
 var router = [
   'module.exports = function (web) {',
-  '  web.get(\'/hello\'， function (req, res) {',
+  '  web.get(\'/hello\', function (req, res) {',
   (program.session || program.all ? '      if (isNaN(req.session.times))\r\n        req.session.times = 0\r\n      else\r\n        req.session.times++;' : ''),
   '      res.render(\'hello\', {',
   (program.session || program.all ? '      times: req.session.times,' : ''),
